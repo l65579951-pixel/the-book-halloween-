@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Book of Five Tales - Edición de Halloween</title>
+    <title>The Book of Five Tales - Notion Book Widget</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@400;600;700&family=Metamorphous&family=Pinyon+Script&family=UnifrakturMaguntia&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@500;700&family=IM+Fell+English:ital@0;1&family=UnifrakturMaguntia&display=swap" rel="stylesheet">
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
@@ -19,22 +19,18 @@
                 extend: {
                     colors: {
                         spooky: {
-                            gold: '#d4af37',
-                            darkGold: '#8a7122',
-                            blood: '#8b0000',
-                            crimson: '#dc143c',
-                            parchment: '#f4e4bc',
-                            parchmentDark: '#1a1815',
-                            leather: '#2b1b17',
-                            accent: '#ff6600',
+                            gold: '#c5a059',
+                            darkGold: '#7a5f28',
+                            blood: '#7a0909',
+                            parchmentLeft: '#f2e3c6',
+                            parchmentRight: '#eee0bf',
+                            ink: '#231b15',
                         }
                     },
                     fontFamily: {
                         gothic: ['UnifrakturMaguntia', 'serif'],
                         cinzel: ['Cinzel', 'serif'],
                         cinzelDeco: ['Cinzel Decorative', 'serif'],
-                        meta: ['Metamorphous', 'serif'],
-                        pinyon: ['Pinyon Script', 'cursive'],
                         book: ['IM Fell English', 'serif']
                     }
                 }
@@ -43,718 +39,360 @@
     </script>
 
     <style>
-        /* Custom Styles & CSS Animations */
-        body {
-            background-color: #050508;
+        /* Transparent Background for Seamless Notion Embed */
+        html, body {
+            background-color: transparent !important;
+            margin: 0;
+            padding: 0;
             overflow-x: hidden;
             user-select: none;
         }
 
-        /* Ambient Glow & Lightning Effect */
-        .lightning-flash {
-            animation: lightning 12s infinite;
-        }
-
-        @keyframes lightning {
-            0%, 95%, 98%, 100% { opacity: 0; }
-            96% { opacity: 0.8; background-color: #e2e8f0; }
-            97% { opacity: 0.2; background-color: #cbd5e1; }
-            99% { opacity: 0.6; background-color: #f8fafc; }
-        }
-
-        /* Floating Bats & Fog Animation */
-        .fog-layer {
-            background: linear-gradient(to bottom, rgba(10,10,15,0) 0%, rgba(20,15,25,0.4) 50%, rgba(5,5,8,0.95) 100%);
-        }
-
-        /* 3D Book Perspective & Flip Engine */
-        .perspective-1500 {
-            perspective: 1800px;
-        }
-
-        .book-container {
-            transform-style: preserve-3d;
-            transition: transform 1s cubic-bezier(0.25, 1, 0.5, 1);
-        }
-
-        .book-cover {
-            transform-style: preserve-3d;
-            transform-origin: left center;
-            transition: transform 1.4s cubic-bezier(0.645, 0.045, 0.355, 1);
-        }
-
-        .book-cover.isOpen {
-            transform: rotateY(-180deg);
-        }
-
-        .page-turn {
-            transform-style: preserve-3d;
-            transform-origin: left center;
-            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .page-turn.flipped {
-            transform: rotateY(-180deg);
-        }
-
-        /* Parchment Texture Simulation */
-        .bg-parchment-texture {
-            background-color: #f3e5c8;
-            background-image: 
-                radial-gradient(circle at 50% 50%, rgba(255,255,255,0.3) 0%, rgba(0,0,0,0.1) 100%),
-                radial-gradient(circle at 10% 20%, rgba(139,69,19,0.15) 0%, transparent 40%),
-                radial-gradient(circle at 90% 80%, rgba(139,69,19,0.18) 0%, transparent 40%);
-            box-shadow: inset 0 0 50px rgba(74, 45, 20, 0.5), inset 0 0 10px rgba(0,0,0,0.7);
-        }
-
-        .burned-edges {
+        /* Open Book Spread Container Shadow */
+        .book-spread {
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.75), 0 5px 15px rgba(0, 0, 0, 0.5);
+            border-radius: 8px;
             position: relative;
         }
 
-        .burned-edges::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            box-shadow: inset 0 0 30px #2a1608, inset 0 0 12px #000;
-            pointer-events: none;
-            z-index: 10;
+        /* Central Spine Shadow Effect (3D Folding Line) */
+        .book-spine-shadow {
+            background: linear-gradient(
+                to right,
+                rgba(0, 0, 0, 0.35) 0%,
+                rgba(0, 0, 0, 0.15) 35%,
+                rgba(0, 0, 0, 0.45) 50%,
+                rgba(0, 0, 0, 0.15) 65%,
+                rgba(0, 0, 0, 0.35) 100%
+            );
         }
 
-        /* Candle Flame Flickering */
-        .flame {
-            animation: flicker 0.15s infinite alternate ease-in-out;
-            transform-origin: center bottom;
+        /* Parchment Texture with Burned Edge Gradients */
+        .parchment-page-left {
+            background: radial-gradient(circle at 10% 20%, #f7e8cc 0%, #e8d5b2 100%);
+            box-shadow: inset 12px 0 25px -10px rgba(0,0,0,0.4), inset 0 0 20px rgba(74, 45, 20, 0.25);
         }
 
-        @keyframes flicker {
-            0% { transform: scale(1) rotate(-1deg); opacity: 0.95; }
-            50% { transform: scale(1.08) rotate(1deg); opacity: 1; filter: drop-shadow(0 0 10px #ffaa00); }
-            100% { transform: scale(0.95) rotate(-2deg); opacity: 0.88; }
+        .parchment-page-right {
+            background: radial-gradient(circle at 90% 20%, #f7e8cc 0%, #e8d5b2 100%);
+            box-shadow: inset -12px 0 25px -10px rgba(0,0,0,0.4), inset 0 0 20px rgba(74, 45, 20, 0.25);
         }
 
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #1a1410;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #5c4033;
-            border-radius: 3px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #8b0000;
-        }
-
+        /* Drop Cap Styling */
         .drop-cap::first-letter {
             font-family: 'UnifrakturMaguntia', serif;
             float: left;
-            font-size: 3.5rem;
+            font-size: 2.8rem;
             line-height: 0.8;
-            padding-top: 4px;
-            padding-right: 8px;
-            color: #8b0000;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+            padding-top: 2px;
+            padding-right: 6px;
+            color: #7a0909;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
         }
 
-        /* Leather texture */
-        .bg-leather {
-            background-color: #1c0d0a;
-            background-image: 
-                radial-gradient(rgba(0,0,0,0.7), rgba(15,5,3,0.95)),
-                repeating-linear-gradient(45deg, rgba(255,255,255,0.01) 0px, rgba(255,255,255,0.01) 2px, transparent 2px, transparent 4px);
-            box-shadow: inset 0 0 80px rgba(0,0,0,0.9);
+        /* Custom Scrollbar for compact reading */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(43, 27, 23, 0.1);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #8b5a2b;
+            border-radius: 2px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #7a0909;
+        }
+
+        /* Page Turn Animation Effect */
+        .page-fade {
+            animation: pageFade 0.4s ease-in-out;
+        }
+
+        @keyframes pageFade {
+            0% { opacity: 0.3; transform: scale(0.995); }
+            100% { opacity: 1; transform: scale(1); }
         }
     </style>
 </head>
-<body class="min-h-screen text-slate-200 flex flex-col justify-between relative overflow-x-hidden selection:bg-spooky-blood selection:text-white">
+<body class="p-2 sm:p-4 flex flex-col items-center justify-center min-h-screen text-spooky-ink">
 
-    <!-- Flash & Ambient FX Background -->
-    <div id="lightning" class="fixed inset-0 pointer-events-none z-0 lightning-flash"></div>
-    <div class="fixed inset-0 pointer-events-none z-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-amber-950/20 via-slate-950/80 to-black"></div>
-    <div class="fixed inset-0 pointer-events-none z-0 fog-layer"></div>
-
-    <!-- Animated Flying Bats SVG Background Container -->
-    <div id="batsContainer" class="fixed inset-0 pointer-events-none z-0 overflow-hidden"></div>
-
-    <!-- Top Floating Audio Controls & Utilities Header -->
-    <header class="relative z-40 w-full p-4 flex flex-wrap justify-between items-center gap-3 backdrop-blur-sm bg-black/40 border-b border-amber-900/30">
-        <div class="flex items-center space-x-3">
-            <span class="text-2xl text-amber-500 font-gothic tracking-wider flex items-center gap-2">
-                <i data-lucide="skull" class="w-6 h-6 text-amber-600 animate-pulse"></i>
-                <span class="hidden sm:inline">Halloween Spellbook</span>
-            </span>
+    <!-- Notion Floating Audio & Utility Bar -->
+    <div class="w-full max-w-4xl mb-2 flex items-center justify-between px-3 py-1.5 bg-black/80 backdrop-blur-md rounded-full border border-amber-900/40 text-amber-200/90 shadow-lg text-xs">
+        <div class="flex items-center gap-2 font-cinzel font-semibold tracking-wider text-amber-400">
+            <i data-lucide="book-open" class="w-4 h-4 text-amber-500 animate-pulse"></i>
+            <span class="hidden sm:inline">The Book of Five Tales</span>
         </div>
 
-        <!-- Ambient Sound Audio Controllers (Synthesizer Web Audio API) -->
-        <div class="flex items-center gap-2 sm:gap-4 bg-slate-900/80 border border-amber-900/50 rounded-full px-4 py-1.5 shadow-lg">
-            <button id="btnAudioToggle" title="Activar/Desactivar Sonido Ambiental" class="flex items-center gap-2 text-xs sm:text-sm text-amber-200/80 hover:text-amber-400 transition">
-                <i id="audioIcon" data-lucide="volume-x" class="w-5 h-5 text-red-400"></i>
-                <span id="audioStatusText" class="hidden md:inline font-cinzel">Audio: OFF</span>
+        <!-- Audio Synthesizer & Action Controls -->
+        <div class="flex items-center gap-3">
+            <button id="btnAudioToggle" title="Sonido Ambiental (Lluvia/Viento)" class="flex items-center gap-1.5 hover:text-amber-400 transition bg-amber-950/40 px-2.5 py-1 rounded-full border border-amber-800/40">
+                <i id="audioIcon" data-lucide="volume-x" class="w-3.5 h-3.5 text-red-400"></i>
+                <span id="audioStatusText" class="font-cinzel text-[11px]">Audio</span>
             </button>
 
-            <div class="h-4 w-[1px] bg-amber-900/60"></div>
-
-            <button id="btnThunder" title="Lanzar Trueno Manual" class="text-amber-200/70 hover:text-amber-400 transition p-1">
-                <i data-lucide="zap" class="w-4 h-4"></i>
+            <button id="btnThunder" title="Efecto Trueno VHS" class="hover:text-amber-400 transition p-1 bg-amber-950/40 rounded-full border border-amber-800/40">
+                <i data-lucide="zap" class="w-3.5 h-3.5 text-amber-300"></i>
             </button>
 
-            <div class="h-4 w-[1px] bg-amber-900/60"></div>
-
-            <button id="btnCopyText" title="Copiar historia completa" class="flex items-center gap-1.5 text-xs text-amber-200/80 hover:text-amber-400 transition">
-                <i data-lucide="copy" class="w-4 h-4"></i>
-                <span class="hidden sm:inline">Copiar Texto</span>
-            </button>
-
-            <button id="btnFullscreen" title="Modo Pantalla Completa" class="text-amber-200/70 hover:text-amber-400 transition p-1">
-                <i data-lucide="maximize" class="w-4 h-4"></i>
-            </button>
-        </div>
-    </header>
-
-    <!-- Main Content Stage -->
-    <main class="relative z-10 flex-grow flex items-center justify-center p-2 sm:p-6 lg:p-10 perspective-1500 min-h-[82vh]">
-
-        <!-- Candelabras Effect Left & Right for Desktop -->
-        <div class="hidden xl:flex fixed left-8 top-1/3 flex-col items-center gap-2 pointer-events-none z-20">
-            <div class="w-4 h-8 bg-amber-500 rounded-full blur-sm flame"></div>
-            <div class="w-3 h-6 bg-orange-400 rounded-full flame"></div>
-            <div class="w-8 h-32 bg-gradient-to-b from-amber-100 via-amber-200 to-amber-900 rounded-t-lg shadow-2xl relative">
-                <div class="absolute -bottom-2 -left-2 w-12 h-4 bg-amber-950 rounded-full border border-amber-700"></div>
-            </div>
-        </div>
-
-        <div class="hidden xl:flex fixed right-8 top-1/3 flex-col items-center gap-2 pointer-events-none z-20">
-            <div class="w-4 h-8 bg-amber-500 rounded-full blur-sm flame"></div>
-            <div class="w-3 h-6 bg-orange-400 rounded-full flame"></div>
-            <div class="w-8 h-32 bg-gradient-to-b from-amber-100 via-amber-200 to-amber-900 rounded-t-lg shadow-2xl relative">
-                <div class="absolute -bottom-2 -left-2 w-12 h-4 bg-amber-950 rounded-full border border-amber-700"></div>
-            </div>
-        </div>
-
-        <!-- BOOK WRAPPER -->
-        <div id="mainBook" class="book-container w-full max-w-4xl h-[680px] sm:h-[720px] relative flex shadow-[0_20px_60px_rgba(0,0,0,0.95)] rounded-r-lg rounded-l-md transition-all">
-
-            <!-- BOOK CLOSED / COVER -->
-            <div id="bookCover" class="absolute inset-0 bg-leather rounded-r-2xl rounded-l-md border-4 border-amber-900/80 p-4 sm:p-8 flex flex-col justify-between items-center text-center z-30 cursor-pointer shadow-2xl overflow-hidden hover:border-amber-600/80 transition-colors group">
-                
-                <!-- Metallic Gold Ornament Frame -->
-                <div class="absolute inset-3 border-2 border-spooky-gold/40 rounded-lg pointer-events-none flex flex-col justify-between p-2">
-                    <div class="flex justify-between">
-                        <i data-lucide="shield" class="w-6 h-6 text-spooky-gold/60"></i>
-                        <i data-lucide="shield" class="w-6 h-6 text-spooky-gold/60"></i>
-                    </div>
-                    <div class="flex justify-between">
-                        <i data-lucide="shield" class="w-6 h-6 text-spooky-gold/60 rotate-180"></i>
-                        <i data-lucide="shield" class="w-6 h-6 text-spooky-gold/60 rotate-180"></i>
-                    </div>
-                </div>
-
-                <!-- Book Spine Accent -->
-                <div class="absolute left-0 top-0 bottom-0 w-8 sm:w-12 bg-gradient-to-r from-black via-amber-950/80 to-transparent border-r-2 border-amber-700/50 flex flex-col justify-around items-center py-8">
-                    <div class="w-full h-1 bg-amber-600/40"></div>
-                    <div class="w-full h-1 bg-amber-600/40"></div>
-                    <div class="w-full h-1 bg-amber-600/40"></div>
-                </div>
-
-                <!-- Header Content Cover -->
-                <div class="mt-8 relative z-10">
-                    <p class="font-cinzel text-amber-500/80 text-xs sm:text-sm tracking-[0.3em] uppercase mb-2">Edición Sobrenatural</p>
-                    <div class="h-[1px] w-32 bg-amber-600/50 mx-auto mb-4"></div>
-                </div>
-
-                <!-- Central Title Seal -->
-                <div class="my-auto relative z-10 px-4">
-                    <div class="w-24 h-24 sm:w-32 sm:h-32 mx-auto mb-6 rounded-full border-2 border-spooky-gold/60 flex items-center justify-center bg-black/60 shadow-[0_0_30px_rgba(212,175,55,0.15)] group-hover:scale-105 transition-transform duration-500">
-                        <i data-lucide="ghost" class="w-12 h-12 sm:w-16 sm:h-16 text-spooky-gold animate-pulse"></i>
-                    </div>
-
-                    <h1 class="font-cinzelDeco text-2xl sm:text-4xl md:text-5xl text-spooky-gold font-bold tracking-widest drop-shadow-[0_4px_10px_rgba(0,0,0,0.9)] my-2">
-                        𓆩 𝑻𝒉𝒆 𝒃𝒐𝒐𝒌 𝒐𝒇 𝒇𝒊𝒗𝒆 𝒕𝒂𝒍𝒆𝒔 𓆪
-                    </h1>
-
-                    <p class="font-gothic text-xl sm:text-2xl text-amber-200/90 tracking-wide mt-3">
-                        October 31st. Halloween night.
-                    </p>
-                </div>
-
-                <!-- Footer Interactive Call To Action -->
-                <div class="mb-6 relative z-10">
-                    <button id="btnOpenBook" class="px-8 py-3 bg-amber-950/90 hover:bg-spooky-blood text-amber-200 border border-spooky-gold/60 rounded-full font-cinzel text-sm sm:text-base tracking-widest uppercase shadow-[0_0_20px_rgba(139,0,0,0.6)] hover:shadow-[0_0_30px_rgba(220,20,60,0.9)] transition-all duration-300 flex items-center gap-3 mx-auto">
-                        <i data-lucide="book-open" class="w-5 h-5"></i>
-                        <span>Abrir el Libro</span>
-                    </button>
-                    <p class="text-xs text-amber-500/60 font-cinzel mt-3 animate-bounce">Haz clic para romper el sello</p>
-                </div>
-            </div>
-
-            <!-- BOOK INTERIOR PAGES -->
-            <div id="bookPages" class="w-full h-full bg-parchment-texture rounded-r-xl rounded-l-md text-slate-900 flex flex-col justify-between p-4 sm:p-8 md:p-10 burned-edges shadow-inner relative overflow-hidden hidden">
-                
-                <!-- Inner Page Decorative Header -->
-                <div class="flex justify-between items-center border-b border-amber-900/30 pb-3 z-10">
-                    <span class="font-cinzel text-xs sm:text-sm text-amber-950 font-bold tracking-widest uppercase flex items-center gap-2">
-                        <i data-lucide="book-marked" class="w-4 h-4 text-amber-800"></i>
-                        <span>The Book of Five Tales</span>
-                    </span>
-                    <span id="pageIndicator" class="font-cinzel text-xs text-amber-900 font-semibold">Página 1 de 4</span>
-                </div>
-
-                <!-- Pages Content Carousel Layer -->
-                <div class="relative flex-grow my-4 overflow-y-auto pr-2 z-10" id="pagesViewport">
-                    
-                    <!-- PAGE 1 -->
-                    <div id="page1" class="page-content space-y-4 font-book text-base sm:text-lg leading-relaxed text-slate-900">
-                        <p class="drop-cap">
-                            La tormenta comenzó poco después de que Lucy regresara de la escuela.
-                        </p>
-                        <p>
-                            El cielo, que hasta hacía unos minutos conservaba los últimos vestigios de luz, se había teñido de un gris oscuro y amenazante. El viento agitaba los árboles, la lluvia golpeaba los tejados y los truenos resonaban a lo lejos, anunciando que aquella noche sería mucho más larga de lo esperado.
-                        </p>
-                        <p>
-                            Sin ganas de quedarse esperando bajo la lluvia, Lucy subió al primer autobús que encontró, sin detenerse siquiera a comprobar su destino. Lo único que quería era llegar a casa antes de que la tormenta empeorara.
-                        </p>
-                        <p class="italic text-amber-950 border-l-2 border-amber-800/40 pl-4 py-1">
-                            Sin embargo, el viaje no duró demasiado.
-                        </p>
-                        <p>
-                            A mitad del recorrido, un fuerte ruido interrumpió el traqueteo del motor. El autobús se detuvo bruscamente y el conductor anunció que una de las ruedas se había pinchado. Tendrían que esperar hasta que alguien pudiera ayudarlos.
-                        </p>
-                    </div>
-
-                    <!-- PAGE 2 -->
-                    <div id="page2" class="page-content space-y-4 font-book text-base sm:text-lg leading-relaxed text-slate-900 hidden">
-                        <p>
-                            Lucy miró por la ventana. Afuera, la lluvia caía con tanta fuerza que apenas conseguía distinguir lo que había al otro lado del cristal.
-                        </p>
-                        <p>
-                            Cuando finalmente descendió, descubrió que se encontraba frente a un cementerio. No recordaba haber pasado por aquella zona antes.
-                        </p>
-                        <p>
-                            Mientras intentaba orientarse, vio a una mujer cruzar la entrada del lugar. Llevaba una figura elegante y caminaba bajo la lluvia con una tranquilidad que contrastaba extrañamente con la violencia de la tormenta.
-                        </p>
-                        <p>
-                            Lucy supuso que trabajaría allí o que habría acudido a visitar la tumba de algún familiar. No le pareció especialmente extraño. Después de todo, incluso en Halloween, los cementerios seguían siendo lugares que alguien podía necesitar visitar.
-                        </p>
-                        <p class="font-semibold text-amber-950">
-                            Así que decidió seguirla.
-                        </p>
-                        <p>
-                            Pero, cuando llegó a la entrada, la mujer había desaparecido. Lucy miró a ambos lados, esperando encontrarla entre los árboles o a lo lejos, avanzando por alguno de los senderos. No vio a nadie.
-                        </p>
-                        <p class="font-pinyon text-2xl text-amber-900 pl-4">
-                            —Qué raro… —murmuró.
-                        </p>
-                    </div>
-
-                    <!-- PAGE 3 -->
-                    <div id="page3" class="page-content space-y-4 font-book text-base sm:text-lg leading-relaxed text-slate-900 hidden">
-                        <p>
-                            Convencida de que debía de encontrarse dentro del cementerio, se acercó a las rejas. Fue entonces cuando sucedió algo que no supo explicar.
-                        </p>
-                        <p>
-                            Las puertas comenzaron a abrirse lentamente ante ella. No había nadie al otro lado. Ninguna mano empujaba el hierro, ningún mecanismo parecía ponerse en movimiento. Simplemente se abrieron, acompañadas por un largo chirrido que se perdió entre los truenos.
-                        </p>
-                        <p>
-                            Lucy vaciló durante unos segundos. Después, entró.
-                        </p>
-                        <p>
-                            El cementerio parecía distinto de cualquier otro que hubiera visto. Las lápidas se extendían entre árboles oscuros, las figuras de piedra emergían de la niebla y los senderos desaparecían bajo una fina capa de hojas húmedas. Todo estaba sumido en una quietud inquietante, como si la tormenta no pudiera penetrar del todo en aquel lugar.
-                        </p>
-                        <p>
-                            Un relámpago iluminó repentinamente el cielo.
-                        </p>
-                        <p>
-                            El estruendo que siguió fue tan ensordecedor que Lucy se sobresaltó y corrió hacia el edificio más cercano: una pequeña capilla de aspecto antiguo, escondida entre los árboles.
-                        </p>
-                        <p>
-                            Empujó la puerta y entró, agradecida por haber encontrado un refugio. Pero apenas estuvo dentro, un ruido metálico resonó a sus espaldas. Las puertas se habían cerrado.
-                        </p>
-                    </div>
-
-                    <!-- PAGE 4 (Climax & Scroll selection) -->
-                    <div id="page4" class="page-content space-y-5 font-book text-base sm:text-lg leading-relaxed text-slate-900 hidden">
-                        <p>
-                            Lucy se volvió de inmediato e intentó abrirlas, pero no consiguió moverlas. Probó una segunda vez, con más fuerza. Nada.
-                        </p>
-                        <p>
-                            Fue entonces cuando reparó en el interior de la capilla. Había bancos cubiertos de polvo, candelabros ennegrecidos por el tiempo y un altar de piedra sobre el que descansaba un libro. Era imposible no verlo.
-                        </p>
-
-                        <!-- Highlighted Inscription Frame -->
-                        <div class="my-4 p-4 sm:p-5 rounded-lg bg-amber-950/10 border-2 border-amber-900/60 shadow-inner relative overflow-hidden">
-                            <div class="absolute -right-4 -bottom-4 opacity-10">
-                                <i data-lucide="scroll" class="w-32 h-32 text-amber-950"></i>
-                            </div>
-                            <p class="font-cinzel text-xs text-amber-900 font-bold uppercase tracking-wider mb-2">Inscripción Grabada:</p>
-                            <blockquote class="font-meta italic text-amber-950 text-sm sm:text-base leading-relaxed border-l-4 border-spooky-blood pl-3">
-                                «Cinco relatos aguardan a quien se atreva a leerlos. Cada historia tiene un principio. Cada historia tiene un final. Pero no todos los que comienzan a leer consiguen regresar a la realidad de la que proceden».
-                            </blockquote>
-                        </div>
-
-                        <p>
-                            Frunció el ceño. Aquello tenía que ser alguna clase de libro antiguo, quizá una colección de historias preparada para Halloween. Una coincidencia extraña, sin duda, pero nada más. Abrió la primera página. Había cinco relatos.
-                        </p>
-                        <p class="font-semibold text-amber-950">
-                            Lucy todavía no lo sabía, pero aquel libro no había llegado a sus manos por casualidad. Tampoco sabía que, al comenzar a leer, dejaría de ser una simple espectadora. Porque aquellas historias no estaban escritas para ser imaginadas...
-                        </p>
-
-                        <!-- Selection Menu for 5 Tales -->
-                        <div class="mt-6 pt-4 border-t border-amber-900/40">
-                            <h3 class="font-cinzelDeco text-center text-lg text-amber-950 font-bold mb-3">Los Cinco Relatos Malditos</h3>
-                            <div class="grid grid-cols-1 sm:grid-cols-5 gap-2">
-                                <button onclick="selectTale(1)" class="p-2 bg-amber-900/20 hover:bg-amber-900/40 border border-amber-900/50 rounded font-cinzel text-xs text-amber-950 font-bold text-center transition flex flex-col items-center gap-1 group">
-                                    <i data-lucide="lock" class="w-4 h-4 text-amber-800 group-hover:text-spooky-crimson"></i>
-                                    <span>Tale I</span>
-                                </button>
-                                <button onclick="selectTale(2)" class="p-2 bg-amber-900/20 hover:bg-amber-900/40 border border-amber-900/50 rounded font-cinzel text-xs text-amber-950 font-bold text-center transition flex flex-col items-center gap-1 group">
-                                    <i data-lucide="lock" class="w-4 h-4 text-amber-800 group-hover:text-spooky-crimson"></i>
-                                    <span>Tale II</span>
-                                </button>
-                                <button onclick="selectTale(3)" class="p-2 bg-amber-900/20 hover:bg-amber-900/40 border border-amber-900/50 rounded font-cinzel text-xs text-amber-950 font-bold text-center transition flex flex-col items-center gap-1 group">
-                                    <i data-lucide="lock" class="w-4 h-4 text-amber-800 group-hover:text-spooky-crimson"></i>
-                                    <span>Tale III</span>
-                                </button>
-                                <button onclick="selectTale(4)" class="p-2 bg-amber-900/20 hover:bg-amber-900/40 border border-amber-900/50 rounded font-cinzel text-xs text-amber-950 font-bold text-center transition flex flex-col items-center gap-1 group">
-                                    <i data-lucide="lock" class="w-4 h-4 text-amber-800 group-hover:text-spooky-crimson"></i>
-                                    <span>Tale IV</span>
-                                </button>
-                                <button onclick="selectTale(5)" class="p-2 bg-amber-900/20 hover:bg-amber-900/40 border border-amber-900/50 rounded font-cinzel text-xs text-amber-950 font-bold text-center transition flex flex-col items-center gap-1 group">
-                                    <i data-lucide="lock" class="w-4 h-4 text-amber-800 group-hover:text-spooky-crimson"></i>
-                                    <span>Tale V</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-
-                <!-- Page Navigation Controls -->
-                <div class="flex justify-between items-center pt-3 border-t border-amber-900/30 z-10">
-                    <button id="btnPrevPage" class="px-4 py-1.5 bg-amber-900/20 hover:bg-amber-900/40 text-amber-950 rounded font-cinzel text-xs font-bold transition flex items-center gap-1 disabled:opacity-30 disabled:cursor-not-allowed">
-                        <i data-lucide="chevron-left" class="w-4 h-4"></i>
-                        <span>Anterior</span>
-                    </button>
-
-                    <button id="btnCloseBook" class="px-3 py-1 bg-amber-950 text-amber-200 rounded-full font-cinzel text-xs hover:bg-spooky-blood transition flex items-center gap-1">
-                        <i data-lucide="book-x" class="w-3.5 h-3.5"></i>
-                        <span>Cerrar Libro</span>
-                    </button>
-
-                    <button id="btnNextPage" class="px-4 py-1.5 bg-amber-900/20 hover:bg-amber-900/40 text-amber-950 rounded font-cinzel text-xs font-bold transition flex items-center gap-1 disabled:opacity-30 disabled:cursor-not-allowed">
-                        <span>Siguiente</span>
-                        <i data-lucide="chevron-right" class="w-4 h-4"></i>
-                    </button>
-                </div>
-
-            </div>
-
-        </div>
-
-    </main>
-
-    <!-- Modal Notification Popup -->
-    <div id="modalNotice" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300">
-        <div class="bg-slate-900 border-2 border-amber-800 p-6 rounded-xl max-w-md w-full text-center shadow-[0_0_50px_rgba(139,0,0,0.8)]">
-            <i data-lucide="skull" class="w-12 h-12 text-amber-500 mx-auto mb-3 animate-bounce"></i>
-            <h3 id="modalTitle" class="font-cinzel text-xl text-amber-400 font-bold mb-2">Capítulo Bloqueado</h3>
-            <p id="modalMessage" class="text-slate-300 text-sm mb-6 font-book">Este relato requiere resolver la inscripción inicial. Lee la introducción completa primero.</p>
-            <button onclick="closeModal()" class="px-6 py-2 bg-amber-900 hover:bg-spooky-blood text-amber-100 rounded-full font-cinzel text-xs tracking-widest uppercase transition">
-                Entendido
+            <button id="btnCopyText" title="Copiar historia completa" class="flex items-center gap-1 hover:text-amber-400 transition bg-amber-950/40 px-2.5 py-1 rounded-full border border-amber-800/40">
+                <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                <span class="hidden sm:inline font-cinzel text-[11px]">Copiar</span>
             </button>
         </div>
     </div>
 
-    <!-- Footer Copyright -->
-    <footer class="relative z-10 py-3 text-center text-xs text-amber-500/50 font-cinzel border-t border-amber-900/20 bg-black/60">
-        𓆩 The Book of Five Tales — Halloween Special Interactive Widget 𓆪
-    </footer>
+    <!-- MAIN OPEN BOOK SPREAD (DOBLE PÁGINA ESTILO LIBRO) -->
+    <div id="bookSpread" class="book-spread w-full max-w-4xl bg-amber-950/90 p-1.5 sm:p-2.5 border border-amber-900/60 rounded-lg relative overflow-hidden">
+        
+        <!-- Outer Leather Edge Layer -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-1 md:gap-0 relative rounded border border-amber-900/40 overflow-hidden bg-[#1f130b]">
+            
+            <!-- CENTRAL SPINE (Lomo 3D en el centro) -->
+            <div class="hidden md:block absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-8 z-30 pointer-events-none book-spine-shadow"></div>
 
-    <!-- JS Application Logic -->
+            <!-- LEFT PAGE -->
+            <div id="leftPageContainer" class="parchment-page-left p-4 sm:p-6 md:p-8 min-h-[420px] sm:min-h-[460px] max-h-[520px] flex flex-col justify-between border-b md:border-b-0 md:border-r border-amber-950/20 relative">
+                
+                <!-- Page Header Left -->
+                <div class="flex justify-between items-center border-b border-amber-900/20 pb-2 mb-3">
+                    <span class="font-cinzel text-[10px] sm:text-xs text-amber-950 font-bold tracking-widest uppercase opacity-75">
+                        𓆩 October 31st 𓆪
+                    </span>
+                    <span id="leftPageNum" class="font-cinzel text-[10px] text-amber-900 font-semibold">Pág. I</span>
+                </div>
+
+                <!-- Page Content Left -->
+                <div id="leftPageContent" class="page-fade flex-grow font-book text-sm sm:text-base leading-relaxed text-spooky-ink overflow-y-auto pr-1">
+                    <!-- Dynamic Left Content -->
+                </div>
+
+            </div>
+
+            <!-- RIGHT PAGE -->
+            <div id="rightPageContainer" class="parchment-page-right p-4 sm:p-6 md:p-8 min-h-[420px] sm:min-h-[460px] max-h-[520px] flex flex-col justify-between relative">
+                
+                <!-- Page Header Right -->
+                <div class="flex justify-between items-center border-b border-amber-900/20 pb-2 mb-3">
+                    <span class="font-cinzel text-[10px] sm:text-xs text-amber-950 font-bold tracking-widest uppercase opacity-75">
+                        Halloween Night
+                    </span>
+                    <span id="rightPageNum" class="font-cinzel text-[10px] text-amber-900 font-semibold">Pág. II</span>
+                </div>
+
+                <!-- Page Content Right -->
+                <div id="rightPageContent" class="page-fade flex-grow font-book text-sm sm:text-base leading-relaxed text-spooky-ink overflow-y-auto pr-1">
+                    <!-- Dynamic Right Content -->
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- FOOTER BOOK NAVIGATION CONTROLS -->
+        <div class="flex justify-between items-center mt-2 px-2 pt-1 border-t border-amber-900/40 text-xs font-cinzel text-amber-200">
+            <button id="btnPrevSpread" class="px-3 py-1 bg-black/60 hover:bg-amber-900/60 border border-amber-800/50 rounded-full transition flex items-center gap-1 disabled:opacity-30 disabled:cursor-not-allowed">
+                <i data-lucide="chevron-left" class="w-4 h-4"></i>
+                <span class="hidden sm:inline">Anterior</span>
+            </button>
+
+            <!-- Spread Indicator -->
+            <div id="spreadIndicator" class="text-[11px] text-amber-400/90 font-semibold tracking-wider">
+                Sección 1 de 3
+            </div>
+
+            <button id="btnNextSpread" class="px-3 py-1 bg-black/60 hover:bg-amber-900/60 border border-amber-800/50 rounded-full transition flex items-center gap-1 disabled:opacity-30 disabled:cursor-not-allowed">
+                <span class="hidden sm:inline">Siguiente</span>
+                <i data-lucide="chevron-right" class="w-4 h-4"></i>
+            </button>
+        </div>
+
+    </div>
+
+    <!-- Modal Popup for Notifications -->
+    <div id="modalNotice" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="bg-slate-900 border border-amber-800 p-5 rounded-xl max-w-xs w-full text-center shadow-2xl">
+            <i data-lucide="check-circle" class="w-10 h-10 text-amber-500 mx-auto mb-2"></i>
+            <h3 id="modalTitle" class="font-cinzel text-base text-amber-400 font-bold mb-1">¡Copiado!</h3>
+            <p id="modalMessage" class="text-slate-300 text-xs mb-4 font-book">La historia ha sido copiada para tu Notion.</p>
+            <button onclick="closeModal()" class="px-5 py-1.5 bg-amber-900 hover:bg-spooky-blood text-amber-100 rounded-full font-cinzel text-xs transition">
+                Cerrar
+            </button>
+        </div>
+    </div>
+
     <script>
-        // State variables
-        let currentPage = 1;
-        const totalPages = 4;
-        let isBookOpen = false;
-        let audioActive = false;
+        // Data structure split for Dual-Page Spread Layout
+        const storySpreads = [
+            {
+                leftNum: "Pág. I",
+                leftHTML: `
+                    <div class="text-center mb-4">
+                        <h2 class="font-cinzelDeco text-lg sm:text-xl text-spooky-blood font-bold tracking-wider">𓆩 𝑻𝒉𝒆 𝒃𝒐𝒐𝒌 𝒐𝒇 𝒇𝒊𝒗𝒆 𝒕𝒂𝒍𝒆𝒔 𓆪</h2>
+                        <p class="font-gothic text-sm text-amber-950 mt-1">October 31st. Halloween night.</p>
+                        <div class="h-[1px] w-20 bg-amber-900/30 mx-auto mt-2"></div>
+                    </div>
+                    <p class="drop-cap">
+                        La tormenta comenzó poco después de que Lucy regresara de la escuela.
+                    </p>
+                    <p class="mt-2">
+                        El cielo, que hasta hacía unos minutos conservaba los últimos vestigios de luz, se había teñido de un gris oscuro y amenazante. El viento agitaba los árboles, la lluvia golpeaba los tejados y los truenos resonaban a lo lejos, anunciando que aquella noche sería mucho más larga de lo esperado.
+                    </p>
+                    <p class="mt-2">
+                        Sin ganas de quedarse esperando bajo la lluvia, Lucy subió al primer autobús que encontró, sin detenerse siquiera a comprobar su destino. Lo único que quería era llegar a casa antes de que la tormenta empeorara.
+                    </p>
+                `,
+                rightNum: "Pág. II",
+                rightHTML: `
+                    <p class="italic border-l-2 border-amber-900/40 pl-3 py-0.5 text-amber-950 font-semibold mb-2">
+                        Sin embargo, el viaje no duró demasiado.
+                    </p>
+                    <p>
+                        A mitad del recorrido, un fuerte ruido interrumpió el traqueteo del motor. El autobús se detuvo bruscamente y el conductor anunció que una de las ruedas se había pinchado. Tendrían que esperar hasta que alguien pudiera ayudarlos.
+                    </p>
+                    <p class="mt-2">
+                        Lucy miró por la ventana. Afuera, la lluvia caía con tanta fuerza que apenas conseguía distinguir lo que había al otro lado del cristal.
+                    </p>
+                    <p class="mt-2">
+                        Cuando finalmente descendió, descubrió que se encontraba frente a un cementerio. No recordaba haber pasado por aquella zona antes.
+                    </p>
+                `
+            },
+            {
+                leftNum: "Pág. III",
+                leftHTML: `
+                    <p>
+                        Mientras intentaba orientarse, vio a una mujer cruzar la entrada del lugar. Llevaba una figura elegante y caminaba bajo la lluvia con una tranquilidad que contrastaba extrañamente con la violencia de la tormenta.
+                    </p>
+                    <p class="mt-2">
+                        Lucy supuso que trabajaría allí o que habría acudido a visitar la tumba de algún familiar. No le pareció especialmente extraño. Después de todo, incluso en Halloween, los cementerios seguían siendo lugares que alguien podía necesitar visitar.
+                    </p>
+                    <p class="mt-2 font-semibold text-amber-950">
+                        Así que decidió seguirla.
+                    </p>
+                    <p class="mt-2">
+                        Pero, cuando llegó a la entrada, la mujer había desaparecido. Lucy miró a ambos lados, esperando encontrarla entre los árboles o a lo lejos, avanzando por alguno de los senderos. No vio a nadie.
+                    </p>
+                    <p class="font-cinzel text-base text-amber-900 mt-2 pl-2">
+                        —Qué raro… —murmuró.
+                    </p>
+                `,
+                rightNum: "Pág. IV",
+                rightHTML: `
+                    <p>
+                        Convencida de que debía de encontrarse dentro del cementerio, se acercó a las rejas. Fue entonces cuando sucedió algo que no supo explicar.
+                    </p>
+                    <p class="mt-2">
+                        Las puertas comenzaron a abrirse lentamente ante ella. No había nadie al otro lado. Ninguna mano empujaba el hierro, ningún mecanismo parecía ponerse en movimiento. Simplemente se abrieron, acompañadas por un largo chirrido que se perdió entre los truenos.
+                    </p>
+                    <p class="mt-2">
+                        Lucy vaciló durante unos segundos. Después, entró.
+                    </p>
+                    <p class="mt-2">
+                        El cementerio parecía distinto de cualquier otro. Las lápidas se extendían entre árboles oscuros, las figuras de piedra emergían de la niebla y los senderos desaparecían bajo hojas húmedas. Todo estaba sumido en una quietud inquietante.
+                    </p>
+                `
+            },
+            {
+                leftNum: "Pág. V",
+                leftHTML: `
+                    <p>
+                        Un relámpago iluminó repentinamente el cielo.
+                    </p>
+                    <p class="mt-2">
+                        El estruendo que siguió fue tan ensordecedor que Lucy se sobresaltó y corrió hacia el edificio más cercano: una pequeña capilla de aspecto antiguo, escondida entre los árboles.
+                    </p>
+                    <p class="mt-2">
+                        Empujó la puerta y entró, agradecida por haber encontrado un refugio. Pero apenas estuvo dentro, un ruido metálico resonó a sus espaldas. Las puertas se habían cerrado.
+                    </p>
+                    <p class="mt-2">
+                        Lucy se volvió de inmediato e intentó abrirlas, pero no consiguió moverlas. Probó una segunda vez, con más fuerza. Nada.
+                    </p>
+                `,
+                rightNum: "Pág. VI",
+                rightHTML: `
+                    <p>
+                        Fue entonces cuando reparó en el interior de la capilla. Había bancos cubiertos de polvo, candelabros ennegrecidos y un altar de piedra sobre el que descansaba un libro. Tenía una cubierta oscura, desgastada, con un emblema plateado.
+                    </p>
 
-        // Web Audio API Synthesizer Context
+                    <!-- Inscription Box -->
+                    <div class="my-3 p-3 bg-amber-950/10 border-l-2 border-spooky-blood rounded">
+                        <blockquote class="font-cinzel text-xs text-amber-950 italic leading-snug">
+                            «Cinco relatos aguardan a quien se atreva a leerlos. Cada historia tiene un principio. Cada historia tiene un final. Pero no todos los que comienzan a leer consiguen regresar a la realidad de la que proceden».
+                        </blockquote>
+                    </div>
+
+                    <p class="font-semibold text-amber-950 text-xs sm:text-sm">
+                        Porque aquellas historias no estaban escritas para ser imaginadas... Estaban escritas para ser vividas. Y Lucy estaba a punto de descubrirlo.
+                    </p>
+                `
+            }
+        ];
+
+        let currentSpread = 0;
+        let audioActive = false;
         let audioCtx = null;
         let rainNode = null;
-        let windNode = null;
 
-        // Story Text Data for Clipboard Copying
-        const fullStoryText = `𓆩 𝑻𝒉𝒆 𝒃𝒐𝒐𝒌 𝒐𝒇 𝒇𝒊𝒗𝒆 𝒕𝒂𝒍𝒆𝒔 𓆪
+        const fullTextForCopy = `𓆩 𝑻𝒉𝒆 𝒃𝒐𝒐𝒌 𝒐𝒇 𝒇𝒊𝒗𝒆 𝒕𝒂𝒍𝒆𝒔 𓆪\nOctober 31st. Halloween night.\n\n` +
+            `La tormenta comenzó poco después de que Lucy regresara de la escuela...\n` +
+            `[Historia completa de Halloween para Notion]`;
 
-October 31st. Halloween night.
-
-La tormenta comenzó poco después de que Lucy regresara de la escuela.
-
-El cielo, que hasta hacía unos minutos conservaba los últimos vestigios de luz, se había teñido de un gris oscuro y amenazante. El viento agitaba los árboles, la lluvia golpeaba los tejados y los truenos resonaban a lo lejos, anunciando que aquella noche sería mucho más larga de lo esperado.
-
-Sin ganas de quedarse esperando bajo la lluvia, Lucy subió al primer autobús que encontró, sin detenerse siquiera a comprobar su destino. Lo único que quería era llegar a casa antes de que la tormenta empeorara.
-
-Sin embargo, el viaje no duró demasiado.
-
-A mitad del recorrido, un fuerte ruido interrumpió el traqueteo del motor. El autobús se detuvo bruscamente y el conductor anunció que una de las ruedas se había pinchado. Tendrían que esperar hasta que alguien pudiera ayudarlos.
-
-Lucy miró por la ventana. Afuera, la lluvia caía con tanta fuerza que apenas conseguía distinguir lo que había al otro lado del cristal.
-
-Cuando finalmente descendió, descubrió que se encontraba frente a un cementerio.
-
-No recordaba haber pasado por aquella zona antes.
-
-Mientras intentaba orientarse, vio a una mujer cruzar la entrada del lugar. Llevaba una figura elegante y caminaba bajo la lluvia con una tranquilidad que contrastaba extrañamente con la violencia de la tormenta.
-
-Lucy supuso que trabajaría allí o que habría acudido a visitar la tumba de algún familiar. No le pareció especialmente extraño. Después de todo, incluso en Halloween, los cementerios seguían siendo lugares que alguien podía necesitar visitar.
-
-Así que decidió seguirla.
-
-Pero, cuando llegó a la entrada, la mujer había desaparecido.
-
-Lucy miró a ambos lados, esperando encontrarla entre los árboles o a lo lejos, advancing por alguno de los senderos. No vio a nadie.
-
-—Qué raro… —murmuró.
-
-Convencida de que debía de encontrarse dentro del cementerio, se acercó a las rejas.
-
-Fue entonces cuando sucedió algo que no supo explicar.
-
-Las puertas comenzaron a abrirse lentamente ante ella.
-
-No había nadie al otro lado. Ninguna mano empujaba el hierro, ningún mecanismo parecía ponerse en movimiento. Simplemente se abrieron, acompañadas por un largo chirrido que se perdió entre los truenos.
-
-Lucy vaciló durante unos segundos.
-
-Después, entró.
-
-El cementerio parecía distinto de cualquier otro que hubiera visto. Las lápidas se extendían entre árboles oscuros, las figuras de piedra emergían de la niebla y los senderos desaparecían bajo una fina capa de hojas húmedas. Todo estaba sumido en una quietud inquietante, como si la tormenta no pudiera penetrar del todo en aquel lugar.
-
-Un relámpago iluminó repentinamente el cielo.
-
-El estruendo que siguió fue tan ensordecedor que Lucy se sobresaltó y corrió hacia el edificio más cercano: una pequeña capilla de aspecto antiguo, escondida entre los árboles.
-
-Empujó la puerta y entró, agradecida por haber encontrado un refugio.
-
-Pero apenas estuvo dentro, un ruido metálico resonó a sus espaldas.
-
-Las puertas se habían cerrado.
-
-Lucy se volvió de inmediato e intentó abrirlas, pero no consiguió moverlas. Probó una segunda vez, con más fuerza. Nada.
-
-Fue entonces cuando reparó en el interior de la capilla.
-
-Había bancos cubiertos de polvo, candelabros ennegrecidos por el tiempo y un altar de piedra sobre el que descansaba un libro.
-
-Era imposible no verlo.
-
-Tenía una cubierta oscura, desgastada en los bordes, y un pequeño emblema plateado grabado en el centro. No había título en el lomo ni nombre alguno que indicara quién lo había escrito. A su alrededor, el polvo parecía intacto, como si nadie lo hubiera tocado en décadas.
-
-Lucy se acercó.
-
-Sobre la primera página encontró una inscripción:
-
-«Cinco relatos aguardan a quien se atreva a leerlos. Cada historia tiene un principio. Cada historia tiene un final. Pero no todos los que comienzan a leer consiguen regresar a la realidad de la que proceden».
-
-Frunció el ceño.
-
-Aquello tenía que ser alguna clase de libro antiguo, quizá una colección de historias preparada para Halloween. Una coincidencia extraña, sin duda, pero nada más.
-
-Abrió la primera página.
-
-Había cinco relatos.
-
-Cinco historias de terror, cada una acompañada por un título y una ilustración inquietantemente detallada.
-
-Lucy todavía no lo sabía, pero aquel libro no había llegado a sus manos por casualidad.
-
-Tampoco sabía que, al comenzar a leer, dejaría de ser una simple espectadora.
-
-Porque aquellas historias no estaban escritas para ser imaginadas.
-
-Estaban escritas para ser vividas.
-
-Y Lucy estaba a punto de descubrirlo.`;
-
-        // Initialize Lucide Icons
         window.onload = function() {
             lucide.createIcons();
-            spawnBats();
-            setupEventListeners();
-            updatePageVisibility();
+            renderSpread();
+
+            document.getElementById('btnNextSpread').addEventListener('click', nextSpread);
+            document.getElementById('btnPrevSpread').addEventListener('click', prevSpread);
+            document.getElementById('btnAudioToggle').addEventListener('click', toggleAudio);
+            document.getElementById('btnThunder').addEventListener('click', triggerThunder);
+            document.getElementById('btnCopyText').addEventListener('click', copyText);
         };
 
-        // Create Background Flying Bats Animation Dynamic SVG
-        function spawnBats() {
-            const container = document.getElementById('batsContainer');
-            const batCount = 8;
+        function renderSpread() {
+            const spread = storySpreads[currentSpread];
 
-            for (let i = 0; i < batCount; i++) {
-                const bat = document.createElement('div');
-                bat.className = 'absolute pointer-events-none opacity-40';
-                bat.style.left = `-50px`;
-                bat.style.top = `${Math.random() * 80}%`;
-                
-                const duration = 12 + Math.random() * 15;
-                const delay = Math.random() * 10;
-                const scale = 0.4 + Math.random() * 0.6;
+            const leftContent = document.getElementById('leftPageContent');
+            const rightContent = document.getElementById('rightPageContent');
 
-                bat.innerHTML = `
-                    <svg width="40" height="25" viewBox="0 0 50 30" fill="#3a2510">
-                        <path d="M25,15 C20,5 10,0 0,10 C5,18 15,20 20,16 C22,22 28,22 30,16 C35,20 45,18 50,10 C40,0 30,5 25,15 Z" />
-                    </svg>
-                `;
+            leftContent.classList.remove('page-fade');
+            rightContent.classList.remove('page-fade');
 
-                bat.animate([
-                    { transform: `translateX(0vw) translateY(0px) scale(${scale})` },
-                    { transform: `translateX(110vw) translateY(${Math.random() * 100 - 50}px) scale(${scale})` }
-                ], {
-                    duration: duration * 1000,
-                    iterations: Infinity,
-                    delay: delay * 1000,
-                    easing: 'linear'
-                });
+            void leftContent.offsetWidth; // Trigger reflow for CSS animation
 
-                container.appendChild(bat);
-            }
+            leftContent.innerHTML = spread.leftHTML;
+            rightContent.innerHTML = spread.rightHTML;
+
+            document.getElementById('leftPageNum').innerText = spread.leftNum;
+            document.getElementById('rightPageNum').innerText = spread.rightNum;
+
+            leftContent.classList.add('page-fade');
+            rightContent.classList.add('page-fade');
+
+            document.getElementById('spreadIndicator').innerText = `Sección ${currentSpread + 1} de ${storySpreads.length}`;
+
+            document.getElementById('btnPrevSpread').disabled = (currentSpread === 0);
+            document.getElementById('btnNextSpread').disabled = (currentSpread === storySpreads.length - 1);
         }
 
-        // Setup Event Listeners
-        function setupEventListeners() {
-            document.getElementById('btnOpenBook').addEventListener('click', openBook);
-            document.getElementById('bookCover').addEventListener('click', (e) => {
-                if (!isBookOpen) openBook();
-            });
-
-            document.getElementById('btnCloseBook').addEventListener('click', closeBook);
-            document.getElementById('btnNextPage').addEventListener('click', nextPage);
-            document.getElementById('btnPrevPage').addEventListener('click', prevPage);
-
-            document.getElementById('btnAudioToggle').addEventListener('click', toggleAudio);
-            document.getElementById('btnThunder').addEventListener('click', triggerManualThunder);
-            document.getElementById('btnCopyText').addEventListener('click', copyStoryToClipboard);
-            document.getElementById('btnFullscreen').addEventListener('click', toggleFullscreen);
-        }
-
-        // Book Control Functions
-        function openBook() {
-            const cover = document.getElementById('bookCover');
-            const pages = document.getElementById('bookPages');
-
-            playPageFlipSound();
-            cover.classList.add('isOpen');
-            
-            setTimeout(() => {
-                cover.classList.add('hidden');
-                pages.classList.remove('hidden');
-                isBookOpen = true;
-            }, 600);
-
-            if (!audioActive) {
-                toggleAudio(); // Auto start soft ambient sound on first interaction
-            }
-        }
-
-        function closeBook() {
-            const cover = document.getElementById('bookCover');
-            const pages = document.getElementById('bookPages');
-
-            playPageFlipSound();
-            pages.classList.add('hidden');
-            cover.classList.remove('hidden');
-
-            setTimeout(() => {
-                cover.classList.remove('isOpen');
-                isBookOpen = false;
-                currentPage = 1;
-                updatePageVisibility();
-            }, 50);
-        }
-
-        function nextPage() {
-            if (currentPage < totalPages) {
+        function nextSpread() {
+            if (currentSpread < storySpreads.length - 1) {
                 playPageFlipSound();
-                currentPage++;
-                updatePageVisibility();
+                currentSpread++;
+                renderSpread();
             }
         }
 
-        function prevPage() {
-            if (currentPage > 1) {
+        function prevSpread() {
+            if (currentSpread > 0) {
                 playPageFlipSound();
-                currentPage--;
-                updatePageVisibility();
+                currentSpread--;
+                renderSpread();
             }
         }
 
-        function updatePageVisibility() {
-            for (let i = 1; i <= totalPages; i++) {
-                const pageEl = document.getElementById(`page${i}`);
-                if (pageEl) {
-                    if (i === currentPage) {
-                        pageEl.classList.remove('hidden');
-                    } else {
-                        pageEl.classList.add('hidden');
-                    }
-                }
-            }
-
-            // Update Page Indicator text
-            document.getElementById('pageIndicator').innerText = `Página ${currentPage} de ${totalPages}`;
-
-            // Button States
-            document.getElementById('btnPrevPage').disabled = (currentPage === 1);
-            document.getElementById('btnNextPage').disabled = (currentPage === totalPages);
-        }
-
-        // Modal Functionality for Tales
-        function selectTale(taleNumber) {
-            playThunderSound();
-            showModal(`Relato ${taleNumber} Bloqueado`, `El ritual del primer cuento no se ha completado. Lucy apenas ha abierto la primera página. El Relato ${taleNumber} revelará sus misterios muy pronto en la noche de Halloween.`);
-        }
-
-        function showModal(title, message) {
-            document.getElementById('modalTitle').innerText = title;
-            document.getElementById('modalMessage').innerText = message;
-            const modal = document.getElementById('modalNotice');
-            modal.classList.remove('opacity-0', 'pointer-events-none');
-        }
-
-        function closeModal() {
-            const modal = document.getElementById('modalNotice');
-            modal.classList.add('opacity-0', 'pointer-events-none');
-        }
-
-        // Copy Story to Clipboard
-        function copyStoryToClipboard() {
-            const textarea = document.createElement('textarea');
-            textarea.value = fullStoryText;
-            document.body.appendChild(textarea);
-            textarea.select();
-            try {
-                document.execCommand('copy');
-                showModal('¡Texto Copiado!', 'La historia completa de "The Book of Five Tales" ha sido copiada al portapapeles exitosamente.');
-            } catch (err) {
-                showModal('Error', 'No se pudo copiar el texto automáticamente.');
-            }
-            document.body.removeChild(textarea);
-        }
-
-        // Fullscreen Toggle
-        function toggleFullscreen() {
-            if (!document.fullscreenElement) {
-                document.documentElement.requestFullscreen().catch(err => console.log(err));
-            } else {
-                if (document.exitFullscreen) {
-                    document.exitFullscreen();
-                }
-            }
-        }
-
-        // ==========================================
-        // WEB AUDIO API SYNTHESIZER (Spooky Sound Generator)
-        // ==========================================
+        // Web Audio API Ambient Synthesizer
         function initAudio() {
             if (!audioCtx) {
                 audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -763,36 +401,30 @@ Y Lucy estaba a punto de descubrirlo.`;
 
         function toggleAudio() {
             initAudio();
-
-            if (audioCtx.state === 'suspended') {
-                audioCtx.resume();
-            }
+            if (audioCtx.state === 'suspended') audioCtx.resume();
 
             audioActive = !audioActive;
-
             const icon = document.getElementById('audioIcon');
             const statusText = document.getElementById('audioStatusText');
 
             if (audioActive) {
-                startRainAndWindSynthesizer();
+                startRainSynthesizer();
                 icon.setAttribute('data-lucide', 'volume-2');
                 icon.classList.remove('text-red-400');
                 icon.classList.add('text-amber-400');
-                statusText.innerText = 'Audio: ON';
+                statusText.innerText = 'ON';
             } else {
-                stopRainAndWind();
+                stopRain();
                 icon.setAttribute('data-lucide', 'volume-x');
                 icon.classList.remove('text-amber-400');
                 icon.classList.add('text-red-400');
-                statusText.innerText = 'Audio: OFF';
+                statusText.innerText = 'OFF';
             }
             lucide.createIcons();
         }
 
-        function startRainAndWindSynthesizer() {
+        function startRainSynthesizer() {
             if (!audioCtx) return;
-
-            // Generate Pink/Brown Noise for Rain
             const bufferSize = audioCtx.sampleRate * 2;
             const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
             const output = noiseBuffer.getChannelData(0);
@@ -802,20 +434,19 @@ Y Lucy estaba a punto de descubrirlo.`;
                 const white = Math.random() * 2 - 1;
                 output[i] = (lastOut + (0.02 * white)) / 1.02;
                 lastOut = output[i];
-                output[i] *= 3.5;
+                output[i] *= 3.0;
             }
 
             rainNode = audioCtx.createBufferSource();
             rainNode.buffer = noiseBuffer;
             rainNode.loop = true;
 
-            // Rain Filter
             const rainFilter = audioCtx.createBiquadFilter();
             rainFilter.type = 'lowpass';
-            rainFilter.frequency.setValueAtTime(1000, audioCtx.currentTime);
+            rainFilter.frequency.setValueAtTime(800, audioCtx.currentTime);
 
             const rainGain = audioCtx.createGain();
-            rainGain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+            rainGain.gain.setValueAtTime(0.12, audioCtx.currentTime);
 
             rainNode.connect(rainFilter);
             rainFilter.connect(rainGain);
@@ -824,39 +455,38 @@ Y Lucy estaba a punto de descubrirlo.`;
             rainNode.start();
         }
 
-        function stopRainAndWind() {
+        function stopRain() {
             if (rainNode) {
                 try { rainNode.stop(); } catch(e){}
                 rainNode = null;
             }
         }
 
-        // Synthesize Page Flip Creak Sound
         function playPageFlipSound() {
             if (!audioCtx) return;
-
             const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
 
             osc.type = 'triangle';
-            osc.frequency.setValueAtTime(120, audioCtx.currentTime);
-            osc.frequency.exponentialRampToValueAtTime(40, audioCtx.currentTime + 0.15);
+            osc.frequency.setValueAtTime(100, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(30, audioCtx.currentTime + 0.12);
 
-            gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-            gain.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
+            gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+            gain.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.12);
 
             osc.connect(gain);
             gain.connect(audioCtx.destination);
 
             osc.start();
-            osc.stop(audioCtx.currentTime + 0.15);
+            osc.stop(audioCtx.currentTime + 0.12);
         }
 
-        // Synthesize Thunder Crack Sound
-        function playThunderSound() {
-            if (!audioCtx) return;
+        function triggerThunder() {
+            initAudio();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
 
-            const bufferSize = audioCtx.sampleRate * 1.5;
+            if (!audioCtx) return;
+            const bufferSize = audioCtx.sampleRate * 1.2;
             const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
             const output = noiseBuffer.getChannelData(0);
 
@@ -869,12 +499,12 @@ Y Lucy estaba a punto de descubrirlo.`;
 
             const filter = audioCtx.createBiquadFilter();
             filter.type = 'lowpass';
-            filter.frequency.setValueAtTime(300, audioCtx.currentTime);
-            filter.frequency.linearRampToValueAtTime(50, audioCtx.currentTime + 1.2);
+            filter.frequency.setValueAtTime(250, audioCtx.currentTime);
+            filter.frequency.linearRampToValueAtTime(40, audioCtx.currentTime + 1.0);
 
             const gain = audioCtx.createGain();
-            gain.gain.setValueAtTime(0.6, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 1.4);
+            gain.gain.setValueAtTime(0.5, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 1.1);
 
             whiteNoise.connect(filter);
             filter.connect(gain);
@@ -883,22 +513,27 @@ Y Lucy estaba a punto de descubrirlo.`;
             whiteNoise.start();
         }
 
-        function triggerManualThunder() {
-            initAudio();
-            if (audioCtx.state === 'suspended') audioCtx.resume();
-            
-            // Visual Flash
-            const flash = document.getElementById('lightning');
-            flash.style.opacity = '0.9';
-            flash.style.backgroundColor = '#ffffff';
-
-            setTimeout(() => {
-                flash.style.opacity = '0';
-            }, 150);
-
-            playThunderSound();
+        function copyText() {
+            const textarea = document.createElement('textarea');
+            textarea.value = fullTextForCopy;
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                showModal();
+            } catch (err) {}
+            document.body.removeChild(textarea);
         }
 
+        function showModal() {
+            const modal = document.getElementById('modalNotice');
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('modalNotice');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+        }
     </script>
 </body>
 </html>
